@@ -27,8 +27,7 @@ public class CommandUpdater {
         //Object mapper for discord4j classes
         final JacksonResources commandMapper = JacksonResources.create();
 
-        List<ApplicationCommandRequest> commands = filenames.stream().map(s ->
-        {
+        List<ApplicationCommandRequest> commands = filenames.stream().map(s -> {
             try {
                 return commandMapper.getObjectMapper().readValue(getFileAsString(s), ApplicationCommandRequest.class);
             } catch (IOException e) {
@@ -37,8 +36,6 @@ public class CommandUpdater {
         }).toList();
 
         bulkOverwriteCommands(restClient.getApplicationService(), restClient.getApplicationId().block(), commands);
-
-
     }
 
 
@@ -66,8 +63,6 @@ public class CommandUpdater {
                 return bufferedReader.lines().collect(Collectors.joining(System.lineSeparator()));
             }
         }
-
-
     }
 
 
