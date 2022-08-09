@@ -15,6 +15,7 @@ public class GuildCommandUpdater extends CommandUpdater{
         this.guildId = guildId;
     }
 
+    @Override
     protected void bulkOverwriteCommands(ApplicationService appService, Long applicationId, List<ApplicationCommandRequest> commands){
         appService.bulkOverwriteGuildApplicationCommand(applicationId, guildId, commands).doOnNext(cmd -> System.out.println("Guild command updated: " + cmd.name())).subscribe();
     }

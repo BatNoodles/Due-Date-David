@@ -12,6 +12,8 @@ import java.util.stream.Collectors;
 public class CommandUpdater {
     protected final RestClient restClient;
 
+    private static final String commandPath = "commands/";
+
     public CommandUpdater(RestClient restClient){
         this.restClient = restClient;
     }
@@ -57,8 +59,8 @@ public class CommandUpdater {
      * @throws IOException - If an exception occurs opening the file
      */
     private String getFileAsString(String filename) throws IOException{
-        try(InputStream inputStream = ClassLoader.getSystemClassLoader().getResourceAsStream(filename)){
-            if (inputStream == null) return null;
+        try(InputStream inputStream = ClassLoader.getSystemClassLoader().getResourceAsStream(commandPath + filename)){
+            if (inputStream == null) throw new IOException("The InputStream is null!");
             try(InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
                     BufferedReader bufferedReader = new BufferedReader(inputStreamReader)){
                 return bufferedReader.lines().collect(Collectors.joining(System.lineSeparator()));
