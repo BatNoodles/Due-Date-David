@@ -6,6 +6,9 @@ import java.io.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Updates all the global slash commands for the bot.
+ */
 public class CommandUpdater {
     protected final RestClient restClient;
 
@@ -13,6 +16,11 @@ public class CommandUpdater {
         this.restClient = restClient;
     }
 
+    /**
+     * Updates all the commands in the given list of json files.
+     * @param filenames - Filenames of the json files (must be in the resource folder)
+     * @throws RuntimeException - Error opening one of the resource files
+     */
     public void UpdateCommands(List<String> filenames) throws RuntimeException {
         //Object mapper for discord4j classes
         final JacksonResources commandMapper = JacksonResources.create();
@@ -32,6 +40,12 @@ public class CommandUpdater {
     }
 
 
+    /**
+     * Bulk overrides all the given global slash commands.
+     * @param appService - Application service
+     * @param applicationId - Application ID
+     * @param commands - List of commands to be overridden
+     */
     protected void bulkOverwriteCommands(ApplicationService appService, Long applicationId, List<ApplicationCommandRequest> commands){
         appService.bulkOverwriteGlobalApplicationCommand(applicationId, commands).doOnNext(cmd -> System.out.println("Global command updated: " + cmd.name())).subscribe();
     }
