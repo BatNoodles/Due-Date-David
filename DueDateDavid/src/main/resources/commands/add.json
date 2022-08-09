@@ -1,0 +1,36 @@
+{
+  "name": "add",
+  "description": "Adds a due date",
+  "options":[
+    {
+      "name": "name",
+      "description": "Name of the due date",
+      "type": 3,
+      "required": true
+    },
+    {
+      "name": "course",
+      "description": "Name of the associated course",
+      "type": 3,
+      "required": true
+    },
+    {
+      "name": "day",
+      "description": "Day value of the date that it is due",
+      "type": 4,
+      "required": true
+    },
+    {
+      "name": "month",
+      "description": "Month value of the date that it is due",
+      "type": 4,
+      "required": true
+    },
+    {
+      "name": "hour",
+      "description": "Hour it is due (24h format)",
+      "type": 4,
+      "required": true
+    }
+  ]
+}
