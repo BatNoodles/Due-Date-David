@@ -5,10 +5,6 @@ import reactor.core.publisher.Mono;
 
 
 public class DueDateDavid {
-    /**
-     * Runs the bots
-     * @param args First argument should be the token
-     */
     public static void main(String[] args){
         Dotenv dotenv = Dotenv.load();
         DiscordClient client = DiscordClient.create(dotenv.get("TOKEN"));
