@@ -1,16 +1,24 @@
-import discord4j.core.DiscordClient;
+import discord4j.core.DiscordClientBuilder;
 import discord4j.core.GatewayDiscordClient;
 import io.github.cdimascio.dotenv.Dotenv;
-import reactor.core.publisher.Mono;
+
+import java.util.List;
+import java.util.Objects;
 
 
 public class DueDateDavid {
     public static void main(String[] args){
-        Dotenv dotenv = Dotenv.load();
-        DiscordClient client = DiscordClient.create(dotenv.get("TOKEN"));
+        final Dotenv dotenv = Dotenv.load();
+        final GatewayDiscordClient client = Objects.requireNonNull(DiscordClientBuilder.create(dotenv.get("TOKEN")).build().login().block(), "Client cannot be null");
 
-        Mono<Void> login = client.withGateway((GatewayDiscordClient gateway) -> Mono.empty());
+        try{
 
-        login.block();
+            new GuildCommandUpdater(Objects.requireNonNull(client.getRestClient()), Long.parseLong(dotenv.get("GUILD"))).UpdateCommands(List.of("add.json"));
+        }
+        catch (Exception e){
+            System.out.println("Error trying to update slash commands: " + e);
+        }
+
+
     }
 }
