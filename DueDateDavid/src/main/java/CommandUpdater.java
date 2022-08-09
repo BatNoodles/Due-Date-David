@@ -32,7 +32,7 @@ public class CommandUpdater {
     }
 
 
-    private void bulkOverwriteCommands(ApplicationService appService, Long applicationId, List<ApplicationCommandRequest> commands){
+    protected void bulkOverwriteCommands(ApplicationService appService, Long applicationId, List<ApplicationCommandRequest> commands){
         appService.bulkOverwriteGlobalApplicationCommand(applicationId, commands).doOnNext(cmd -> System.out.println("Global command updated: " + cmd.name())).subscribe();
     }
 
