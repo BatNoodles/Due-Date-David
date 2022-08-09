@@ -1,13 +1,8 @@
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import discord4j.common.JacksonResources;
 import discord4j.discordjson.json.ApplicationCommandRequest;
 import discord4j.rest.RestClient;
 import discord4j.rest.service.ApplicationService;
-
-
 import java.io.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,14 +13,15 @@ public class CommandUpdater {
         this.restClient = restClient;
     }
 
-    public void UpdateCommands(List<String> filenames) throws IOException {
+    public void UpdateCommands(List<String> filenames) throws RuntimeException {
         //Object mapper for discord4j classes
         final JacksonResources commandMapper = JacksonResources.create();
 
-        List<ApplicationCommandRequest> commands = filenames.stream().map(s -> {
+        List<ApplicationCommandRequest> commands = filenames.stream().map(s ->
+        {
             try {
-                return commandMapper.getObjectMapper().readValue(s, ApplicationCommandRequest.class);
-            } catch (JsonProcessingException e) {
+                return commandMapper.getObjectMapper().readValue(getFileAsString(s), ApplicationCommandRequest.class);
+            } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }).toList();
