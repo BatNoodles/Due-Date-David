@@ -1,5 +1,6 @@
 import discord4j.core.DiscordClientBuilder;
 import discord4j.core.GatewayDiscordClient;
+import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import io.github.cdimascio.dotenv.Dotenv;
 
 import java.util.List;
@@ -18,6 +19,6 @@ public class DueDateDavid {
             System.out.println("Error trying to update slash commands: " + e);
         }
 
-        client.onDisconnect().block();
+        client.on(ChatInputInteractionEvent.class, SlashCommandHandler::handleCommand).then(client.onDisconnect()).block();
     }
 }
