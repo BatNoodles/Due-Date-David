@@ -13,12 +13,12 @@ public class DueDateDavid {
         final GatewayDiscordClient client = Objects.requireNonNull(DiscordClientBuilder.create(dotenv.get("TOKEN")).build().login().block(), "Client cannot be null");
 
         try{
-            new GuildCommandUpdater(client.getRestClient(), Long.parseLong(dotenv.get("GUILD"))).UpdateCommands(List.of("add.json", "show.json"));
+            new GuildCommandUpdater(client.getRestClient(), Long.parseLong(dotenv.get("GUILD"))).UpdateCommands(List.of("add.json", "show.json")); //Updates all the slash commands
         }
         catch (Exception e){
             System.out.println("Error trying to update slash commands: " + e);
         }
 
-        client.on(ChatInputInteractionEvent.class, SlashCommandHandler::handleCommand).then(client.onDisconnect()).block();
+        client.on(ChatInputInteractionEvent.class, SlashCommandHandler::handleCommand).then(client.onDisconnect()).block(); //Listens for SlashCommands used in the chat until the bot disconnects
     }
 }

@@ -5,6 +5,9 @@ import reactor.core.publisher.Mono;
 
 import java.util.List;
 
+/**
+ * Handles the slash commands by filtering the command name and getting the relevant command handler.
+ */
 public class SlashCommandHandler {
 
     private final static List<SlashCommand> commands = List.of(new AddCommand());

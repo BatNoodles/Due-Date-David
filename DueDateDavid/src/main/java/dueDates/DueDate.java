@@ -1,8 +1,11 @@
 package dueDates;
 
-import java.beans.Transient;
 import java.util.Date;
 
+
+/**
+ * A data structure to represent a due date. Has a name, subject and date/time that it is due.
+ */
 public class DueDate {
     private String name;
     private Subject subject;
