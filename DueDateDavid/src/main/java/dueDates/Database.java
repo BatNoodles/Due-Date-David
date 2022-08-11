@@ -37,6 +37,8 @@ public class Database {
 
     public void addSubject(String subjectName){subjects.add(new Subject(subjectName));}
 
+    public void addDueDate(DueDate dueDate){dueDates.add(dueDate);}
+
     public Optional<Subject> getSubject(String subjectName){return subjects.stream().filter(s->s.getName().equalsIgnoreCase(subjectName)).findFirst();}
 
     /**
