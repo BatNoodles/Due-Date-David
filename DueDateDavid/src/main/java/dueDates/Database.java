@@ -42,6 +42,21 @@ public class Database {
     public Optional<Subject> getSubject(String subjectName){return subjects.stream().filter(s->s.getName().equalsIgnoreCase(subjectName)).findFirst();}
 
     /**
+     * Gets the subject with the specified name, creates it first if it does not exist.
+     * @param subjectName - Name of the subject
+     * @return Subject with the specified name
+     */
+    public Subject getOrAddSubject(String subjectName){
+        Optional<Subject> subject = getSubject(subjectName);
+        if (subject.isEmpty()){
+            Subject s = new Subject(subjectName);
+            subjects.add(s);
+            return s;
+        }
+        return subject.get();
+    }
+
+    /**
      * Adds a discord user ID to a subject; i.e. Allows a user to join a subject so that they can be notified of any due dates in that class.
      * If the subject does not exist it is created.
      * @param subjectName - Name of the subject, case-insensitive
