@@ -1,27 +1,24 @@
 package dueDates;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.Date;
 
 
 /**
  * A data structure to represent a due date. Has a name, subject and date/time that it is due.
  */
-
-
-
 public class DueDate {
+    private static final DateTimeFormatter dateFormat =DateTimeFormatter.ofPattern("yyyydd/MMHH:mm");
 
-    private static DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd/MMHH:mm");
-
-    private String name;
-    private Course course;
-    private Date date;
+    private final String name;
+    private final Course course;
+    private final LocalDateTime date;
 
     public static boolean dateTimeIsValid(String date, String time){
         try{
-            dateFormat.parse(date + time);
+            LocalDateTime.parse(LocalDate.now().getYear() + date + time, dateFormat);
             return true;
         } catch (DateTimeParseException e) {return false;}
     }
@@ -29,5 +26,7 @@ public class DueDate {
     public DueDate(String name, String course, String date, String time) {
         this.name = name;
 
+        this.course = Database.getInstance().getOrAddCourse(course);
+        this.date = LocalDateTime.parse(LocalDateTime.now().getYear() + date + time, dateFormat); //Kind of lazy, but it is very unlikely that anyone would add a due date in another year - at least for the NZ school schedule.
     }
 }
