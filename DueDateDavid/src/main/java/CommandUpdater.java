@@ -4,6 +4,8 @@ import discord4j.rest.RestClient;
 import discord4j.rest.service.ApplicationService;
 import java.io.*;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 /**
@@ -14,9 +16,8 @@ public class CommandUpdater {
 
     private static final String commandPath = "commands/";
 
-    public CommandUpdater(RestClient restClient){
-        this.restClient = restClient;
-    }
+    private final Logger logger = Logger.getLogger(CommandUpdater.class.getName());
+    public CommandUpdater(RestClient restClient){this.restClient = restClient;}
 
     /**
      * Updates all the commands in the given list of json files.
@@ -46,7 +47,7 @@ public class CommandUpdater {
      * @param commands - List of commands to be overridden
      */
     protected void bulkOverwriteCommands(ApplicationService appService, Long applicationId, List<ApplicationCommandRequest> commands){
-        appService.bulkOverwriteGlobalApplicationCommand(applicationId, commands).doOnNext(cmd -> System.out.println("Global command updated: " + cmd.name())).subscribe();
+        appService.bulkOverwriteGlobalApplicationCommand(applicationId, commands).doOnNext(cmd -> logger.log(Level.FINE, "Global command updated: " + cmd.name())).subscribe();
     }
 
     /**
