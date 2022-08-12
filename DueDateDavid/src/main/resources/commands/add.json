@@ -15,21 +15,15 @@
       "required": true
     },
     {
-      "name": "day",
-      "description": "Day value of the date that it is due",
-      "type": 4,
+      "name": "date",
+      "description": "Date of the due date (dd/MM)",
+      "type": 3,
       "required": true
     },
     {
-      "name": "month",
-      "description": "Month value of the date that it is due",
-      "type": 4,
-      "required": true
-    },
-    {
-      "name": "hour",
-      "description": "Hour it is due (24h format)",
-      "type": 4,
+      "name": "time",
+      "description": "Time of the due date (HH:mm)",
+      "type": 3,
       "required": true
     }
   ]
