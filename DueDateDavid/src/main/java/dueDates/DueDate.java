@@ -1,5 +1,7 @@
 package dueDates;
 
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Date;
 
 
@@ -8,14 +10,24 @@ import java.util.Date;
  */
 
 
-//TODO: Decide whether the date should be inputted as a string (and then checked) or keep it as a number. same with time?
 
 public class DueDate {
+
+    private static DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd/MMHH:mm");
+
     private String name;
-    private Subject subject;
+    private Subject course;
     private Date date;
 
-    public DueDate(String name, String subject, int day, int month, int hour) {
+    public static boolean dateTimeIsValid(String date, String time){
+        try{
+            dateFormat.parse(date + time);
+            return true;
+        } catch (DateTimeParseException e) {return false;}
+    }
+
+    public DueDate(String name, String course, String date, String time) {
         this.name = name;
+
     }
 }
