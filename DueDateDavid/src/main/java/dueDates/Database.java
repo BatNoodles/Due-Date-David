@@ -26,48 +26,48 @@ public class Database {
 
     public List<DueDate> getDueDates(){return Collections.unmodifiableList(dueDates);}
 
-    public List<Course> getSubjects(){return Collections.unmodifiableList(courses);}
+    public List<Course> getCourses(){return Collections.unmodifiableList(courses);}
 
     /**
      * Gets all due dates based on a predicate.
      * @param predicate - Due date predicate
-     * @return List of the subjects matching the predicate
+     * @return List of the courses matching the predicate
      */
     public List<DueDate> filterDueDates(Predicate<? super DueDate> predicate){return dueDates.stream().filter(predicate).toList();}
 
-    public void addSubject(String subjectName){
-        courses.add(new Course(subjectName));}
+    public void addCourse(String courseName){
+        courses.add(new Course(courseName));}
 
     public void addDueDate(DueDate dueDate){dueDates.add(dueDate);}
 
-    public Optional<Course> getSubject(String subjectName){return courses.stream().filter(s->s.getName().equalsIgnoreCase(subjectName)).findFirst();}
+    public Optional<Course> getCourse(String courseName){return courses.stream().filter(s->s.getName().equalsIgnoreCase(courseName)).findFirst();}
 
     /**
-     * Gets the subject with the specified name, creates it first if it does not exist.
-     * @param subjectName - Name of the subject
-     * @return Subject with the specified name
+     * Gets the course with the specified name, creates it first if it does not exist.
+     * @param courseName - Name of the course
+     * @return course with the specified name
      */
-    public Course getOrAddSubject(String subjectName){
-        Optional<Course> subject = getSubject(subjectName);
-        if (subject.isEmpty()){
-            Course s = new Course(subjectName);
+    public Course getOrAddCourse(String courseName){
+        Optional<Course> course = getCourse(courseName);
+        if (course.isEmpty()){
+            Course s = new Course(courseName);
             courses.add(s);
             return s;
         }
-        return subject.get();
+        return course.get();
     }
 
     /**
-     * Adds a discord user ID to a subject; i.e. Allows a user to join a subject so that they can be notified of any due dates in that class.
-     * If the subject does not exist it is created.
-     * @param subjectName - Name of the subject, case-insensitive
+     * Adds a discord user ID to a course; i.e. Allows a user to join a course so that they can be notified of any due dates in that class.
+     * If the course does not exist it is created.
+     * @param courseName - Name of the course, case-insensitive
      * @param userId - Discord user id
      */
-    public void joinSubject(String subjectName, Long userId){
-        getSubject(subjectName).ifPresentOrElse(
+    public void joinCourse(String courseName, Long userId){
+        getCourse(courseName).ifPresentOrElse(
                 s->s.addUserId(userId),
                 ()-> {
-                    Course s = new Course(subjectName);
+                    Course s = new Course(courseName);
                     s.addUserId(userId);
                     courses.add(s);
                 }
