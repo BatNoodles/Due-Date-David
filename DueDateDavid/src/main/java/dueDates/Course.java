@@ -6,11 +6,11 @@ import java.util.Set;
 /**
  * Data structure to represent a subject. Has a subject name and a list of discord users "enrolled" in that class.
  */
-public class Subject {
+public class Course {
     private final String name;
     private final Set<Long> memberIds;
 
-    public Subject(String name){
+    public Course(String name){
         this.name = name;
         memberIds = new HashSet<>();
     }

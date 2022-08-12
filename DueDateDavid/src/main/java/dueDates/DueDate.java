@@ -16,7 +16,7 @@ public class DueDate {
     private static DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd/MMHH:mm");
 
     private String name;
-    private Subject course;
+    private Course course;
     private Date date;
 
     public static boolean dateTimeIsValid(String date, String time){

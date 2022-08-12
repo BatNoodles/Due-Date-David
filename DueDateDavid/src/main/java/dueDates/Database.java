@@ -11,7 +11,7 @@ import java.util.function.Predicate;
  */
 public class Database {
     private final List<DueDate> dueDates;
-    private final List<Subject> subjects;
+    private final List<Course> courses;
 
     private static final Database DATABASE = new Database();
 
@@ -21,12 +21,12 @@ public class Database {
 
     private Database(){
         dueDates = new ArrayList<>();
-        subjects = new ArrayList<>();
+        courses = new ArrayList<>();
     }
 
     public List<DueDate> getDueDates(){return Collections.unmodifiableList(dueDates);}
 
-    public List<Subject> getSubjects(){return Collections.unmodifiableList(subjects);}
+    public List<Course> getSubjects(){return Collections.unmodifiableList(courses);}
 
     /**
      * Gets all due dates based on a predicate.
@@ -35,22 +35,23 @@ public class Database {
      */
     public List<DueDate> filterDueDates(Predicate<? super DueDate> predicate){return dueDates.stream().filter(predicate).toList();}
 
-    public void addSubject(String subjectName){subjects.add(new Subject(subjectName));}
+    public void addSubject(String subjectName){
+        courses.add(new Course(subjectName));}
 
     public void addDueDate(DueDate dueDate){dueDates.add(dueDate);}
 
-    public Optional<Subject> getSubject(String subjectName){return subjects.stream().filter(s->s.getName().equalsIgnoreCase(subjectName)).findFirst();}
+    public Optional<Course> getSubject(String subjectName){return courses.stream().filter(s->s.getName().equalsIgnoreCase(subjectName)).findFirst();}
 
     /**
      * Gets the subject with the specified name, creates it first if it does not exist.
      * @param subjectName - Name of the subject
      * @return Subject with the specified name
      */
-    public Subject getOrAddSubject(String subjectName){
-        Optional<Subject> subject = getSubject(subjectName);
+    public Course getOrAddSubject(String subjectName){
+        Optional<Course> subject = getSubject(subjectName);
         if (subject.isEmpty()){
-            Subject s = new Subject(subjectName);
-            subjects.add(s);
+            Course s = new Course(subjectName);
+            courses.add(s);
             return s;
         }
         return subject.get();
@@ -66,9 +67,9 @@ public class Database {
         getSubject(subjectName).ifPresentOrElse(
                 s->s.addUserId(userId),
                 ()-> {
-                    Subject s = new Subject(subjectName);
+                    Course s = new Course(subjectName);
                     s.addUserId(userId);
-                    subjects.add(s);
+                    courses.add(s);
                 }
         );
     }
