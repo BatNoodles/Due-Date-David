@@ -13,9 +13,14 @@ public class JoinCommand implements SlashCommand{
 
     @Override
     public Mono<Void> handleCommand(ChatInputInteractionEvent event) {
+        Database database = Database.getInstance();
         EventAdapter adapter = new EventAdapter(event);
+        Long userId = event.getInteraction().getUser().getId().asLong();
         String course = adapter.optionAsString("course").toUpperCase();
-        Database.getInstance().joinCourse(course, event.getInteraction().getUser().getId().asLong());
+
+        if(database.userInCourse(course, userId)) return event.reply("You are already in " + course).withEphemeral(true);
+
+        database.joinCourse(course, userId);
         return event.reply("Successfully joined the course " + course).withEphemeral(true);
     }
 }
