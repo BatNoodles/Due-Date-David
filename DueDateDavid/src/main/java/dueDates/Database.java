@@ -65,7 +65,7 @@ public class Database {
      */
     public void joinCourse(String courseName, Long userId){
         getCourse(courseName).ifPresentOrElse(
-                s->s.addUserId(userId),
+                c->c.addUserId(userId),
                 ()-> {
                     Course s = new Course(courseName);
                     s.addUserId(userId);
