@@ -16,5 +16,10 @@ public class Course {
     }
     public String getName(){return name;}
 
+
+    public boolean containsUser(Long userId){
+        return memberIds.contains(userId);
+    }
+
     public void addUserId(Long userId){memberIds.add(userId);}
 }
