@@ -74,5 +74,8 @@ public class Database {
         );
     }
 
+    public boolean userInCourse(String course, Long userId){
+        return getCourse(course).map(value -> value.containsUser(userId)).orElse(false);
+    }
 
 }
