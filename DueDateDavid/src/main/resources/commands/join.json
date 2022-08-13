@@ -1,0 +1,12 @@
+{
+  "name": "join",
+  "description": "Joins a course",
+  "options":[
+    {
+      "name": "course",
+      "description": "Name of the course",
+      "type": 3,
+      "required": true
+    }
+  ]
+}
