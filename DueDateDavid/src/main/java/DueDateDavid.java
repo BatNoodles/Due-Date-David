@@ -6,6 +6,7 @@ import io.github.cdimascio.dotenv.Dotenv;
 import java.util.List;
 import java.util.Objects;
 
+//TODO: add a listener every minute to check if a due date is happening in the next hour. Also add a recurring event every morning and every monday morning (for daily and weekly reminders of due dates)
 
 public class DueDateDavid {
     public static void main(String[] args){

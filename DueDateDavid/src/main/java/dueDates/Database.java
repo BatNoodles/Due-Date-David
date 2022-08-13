@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
+//TODO: Add a method for checking if a due date is due within a specified time frame (i.e. on hour, till the end of the day, etc)
+
 /**
  * Singleton database.
  */
