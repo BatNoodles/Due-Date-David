@@ -35,7 +35,7 @@ public class DueDate {
 
     @Override
     public String toString(){
-        return String.format("(%s) %s at %s on %d:%d", course, name, date.toLocalDate().toString(), date.getHour(), date.getMinute());
+        return String.format("(%s) %s at %d:%d on %d/%d", course, name, date.getHour(), date.getMinute(), date.getDayOfMonth(), date.getMonthValue());
     }
 
 
