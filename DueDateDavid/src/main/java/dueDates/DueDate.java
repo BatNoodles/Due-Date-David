@@ -29,4 +29,14 @@ public class DueDate {
         this.course = Database.getInstance().getOrAddCourse(course);
         this.date = LocalDateTime.parse(LocalDateTime.now().getYear() + date + time, dateFormat); //Kind of lazy, but it is very unlikely that anyone would add a due date in another year - at least for the NZ school schedule.
     }
+
+
+
+
+    @Override
+    public String toString(){
+        return String.format("(%s) %s at %s on %d:%d", name, course, date.toLocalDate().toString(), date.getHour(), date.getMinute());
+    }
+
+
 }
