@@ -11,7 +11,7 @@ public class Course {
     private final Set<Long> memberIds;
 
     public Course(String name){
-        this.name = name;
+        this.name = name.toUpperCase();
         memberIds = new HashSet<>();
     }
     public String getName(){return name;}
