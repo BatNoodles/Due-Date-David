@@ -26,7 +26,7 @@ public class AddCommand implements SlashCommand{
 
         Database.getInstance().addDueDate(new DueDate(name, course, date, time));
 
-        return event.reply("Due date added");
+        return event.reply("Due date  \""  + name +  "\"added").withEphemeral(true);
 
 
     }
