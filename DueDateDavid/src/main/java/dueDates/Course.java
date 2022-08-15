@@ -15,11 +15,10 @@ public class Course {
         memberIds = new HashSet<>();
     }
     public String getName(){return name;}
-
-
     public boolean containsUser(Long userId){
         return memberIds.contains(userId);
     }
-
     public void addUserId(Long userId){memberIds.add(userId);}
+    @Override
+    public String toString(){return name;}
 }
