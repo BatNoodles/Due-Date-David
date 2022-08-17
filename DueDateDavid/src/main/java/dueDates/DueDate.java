@@ -1,5 +1,6 @@
 package dueDates;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -16,6 +17,12 @@ public class DueDate {
     private final Course course;
     private final LocalDateTime date;
 
+    /**
+     * Returns if the strings for date and time are in the correct format by checking if a DateTimeParseException is raised.
+     * @param date - String for the date in dd/MM format.
+     * @param time - String for the time in HH:mm format.
+     * @return True if the date and time are valid, false if either are not.
+     */
     public static boolean dateTimeIsValid(String date, String time){
         try{
             LocalDateTime.parse(LocalDate.now().getYear() + date + time, dateFormat);
@@ -30,9 +37,13 @@ public class DueDate {
         this.date = LocalDateTime.parse(LocalDateTime.now().getYear() + date + time, dateFormat); //Kind of lazy, but it is very unlikely that anyone would add a due date in another year - at least for the NZ school schedule.
     }
 
-
-
-
+    /**
+     * Returns the duration until the DueDate is due.
+     * @return - Duration until the time of the DueDate.
+     */
+    public Duration getTimeUntil(){
+        return Duration.between(LocalDateTime.now(), date);
+    }
     @Override
     public String toString(){
         return String.format("(%s) %s at %d:%d on %d/%d", course, name, date.getHour(), date.getMinute(), date.getDayOfMonth(), date.getMonthValue());
