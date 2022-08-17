@@ -15,6 +15,8 @@ public class ShowCommand implements SlashCommand{
 
     @Override
     public Mono<Void> handleCommand(ChatInputInteractionEvent event) {
+        Database database = Database.getInstance();
+        if (database.getDueDates().isEmpty()) return event.reply("There are no due dates.");
         return event.reply(Database.getInstance().getDueDates().stream().map(DueDate::toString).collect(Collectors.joining("\n")));
     }
 }
