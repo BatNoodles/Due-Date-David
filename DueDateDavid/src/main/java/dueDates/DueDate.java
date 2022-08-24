@@ -44,6 +44,19 @@ public class DueDate {
     public Duration getTimeUntil(){
         return Duration.between(LocalDateTime.now(), date);
     }
+
+    /**
+     * Gets the course associated with this DueDate
+     * @return - Course
+     */
+    public Course getCourse(){return course;}
+
+    /**
+     * Returns the name of the DueDate
+     * @return String - name
+     */
+    public String getName(){return name;}
+
     @Override
     public String toString(){
         return String.format("(%s) %s at %d:%d on %d/%d", course, name, date.getHour(), date.getMinute(), date.getDayOfMonth(), date.getMonthValue());
