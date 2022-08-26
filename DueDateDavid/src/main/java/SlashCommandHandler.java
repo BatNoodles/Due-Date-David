@@ -8,9 +8,13 @@ import java.util.List;
  * Handles the slash commands by filtering the command name and getting the relevant command handler.
  */
 public class SlashCommandHandler {
-
     private final static List<SlashCommand> commands = List.of(new AddCommand(), new JoinCommand(), new ShowCommand());
 
+    /**
+     * Handles the command by sending it to the correct SlashCommand to handle.
+     * @param e The slash command the user sent
+     * @return Action to be taken
+     */
     public static Mono<Void> handleCommand(ChatInputInteractionEvent e){
         return commands
                 .stream()
