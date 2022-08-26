@@ -34,6 +34,12 @@ public class Course {
     }
 
     /**
+     * Removes a user and returns whether the userId was in the set of memberIds.
+     * @param userId Long - the userId to be removed
+     * @return true if the userId was present in the memberIds
+     */
+    public boolean removeUser(Long userId){return memberIds.remove(userId);}
+    /**
      * Adds a userId to the course
      * @param userId Long - userId
      */
