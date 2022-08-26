@@ -1,21 +1,32 @@
 package commands;
 
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
-import dueDates.Database;
 import reactor.core.publisher.Mono;
+import java.util.List;
 
-import java.util.stream.Collectors;
 
 public class ShowCommand implements SlashCommand{
+    private static final List<SlashCommand> subCommands = List.of(new ShowCoursesCommand(), new ShowDueDatesCommand());
     @Override
     public String name() {
         return "show";
     }
 
+    /**
+     * Passes on the handling of the event to the appropriate sub command based on the name of the first option.
+     * @param event - ChatInputInteractionEvent, the event for the sent slash command
+     * @return Action to be taken
+     */
     @Override
     public Mono<Void> handleCommand(ChatInputInteractionEvent event) {
-        Database database = Database.getInstance();
-        if (database.getDueDates().isEmpty()) return event.reply("There are no due dates.");
-        return event.reply("Upcoming due dates:\n" + database.getDueDates().stream().map(dueDate -> "`" + dueDate + "`").collect(Collectors.joining("\n")));
+        return subCommands
+                .stream()
+                .filter(c -> c.name()
+                        .equals(event.getOptions()
+                                .get(0).
+                                getName()))
+                .map(c -> c.handleCommand(event))
+                .findFirst()
+                .orElse(Mono.empty());
     }
 }

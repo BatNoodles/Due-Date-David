@@ -1,4 +1,23 @@
 {
   "name": "show",
-  "description": "Shows all of the due dates"
+  "description": "Shows due dates or courses",
+  "options": [
+    {
+      "name": "due",
+      "type": 2,
+      "description": "Shows due dates",
+      "options": [
+        {
+          "name": "dates",
+          "type": 1,
+          "description": "Shows due dates"
+        }
+      ]
+    },
+    {
+      "name": "courses",
+      "type": 1,
+      "description": "Shows courses"
+    }
+  ]
 }
