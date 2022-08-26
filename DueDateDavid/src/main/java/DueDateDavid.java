@@ -16,7 +16,7 @@ public class DueDateDavid {
         final GatewayDiscordClient client = Objects.requireNonNull(DiscordClientBuilder.create(dotenv.get("TOKEN")).build().login().block(), "Client cannot be null");
 
         try{
-            new GuildCommandUpdater(client.getRestClient(), Long.parseLong(dotenv.get("GUILD"))).UpdateCommands(List.of("add.json", "show.json", "join.json")); //Updates all the slash commands
+            new GuildCommandUpdater(client.getRestClient(), Long.parseLong(dotenv.get("GUILD"))).UpdateCommands(List.of("add.json", "show.json", "join.json", "leave.json")); //Updates all the slash commands
         }
         catch (Exception e){
             System.out.println("Error trying to update slash commands: " + e);
