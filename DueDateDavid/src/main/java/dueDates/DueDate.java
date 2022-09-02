@@ -63,4 +63,12 @@ public class DueDate {
     }
 
 
+    public boolean equals(Object o){
+        if (o == null) return false;
+        if (!(o instanceof DueDate other)) return false;
+
+        return other.course.equals(course) && other.date.equals(date) && other.name.equals(name);
+    }
+
+
 }
