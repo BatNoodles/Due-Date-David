@@ -46,4 +46,10 @@ public class Course {
     public void addUserId(Long userId){memberIds.add(userId);}
     @Override
     public String toString(){return name;}
+
+    public boolean equals(Object o){
+        if (o == null) return false;
+        if (!(o instanceof  Course other)) return false;
+        return other.name.equals(name) && other.memberIds.equals(memberIds);
+    }
 }
