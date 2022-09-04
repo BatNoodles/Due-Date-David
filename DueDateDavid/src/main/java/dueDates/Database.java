@@ -113,7 +113,7 @@ public class Database {
      * @param filename - Filename of the json file.
      * @return Database - the new Database loaded.
      */
-    private static Database loadOrNew(String filename){
+    public static Database loadOrNew(String filename){
         try {
             return load(filename);
         } catch (IOException e) {
