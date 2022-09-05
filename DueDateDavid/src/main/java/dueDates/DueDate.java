@@ -106,8 +106,9 @@ public class DueDate {
         public void serialize(DueDate dueDate, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
             jsonGenerator.writeStartObject();
             jsonGenerator.writeStringField("name", dueDate.name);
-            jsonGenerator.writeObjectField("date",  dueDate.date);
+            jsonGenerator.writeStringField("date",  dueDate.date.toString());
             jsonGenerator.writeStringField("course", dueDate.course.getName());
+            jsonGenerator.writeEndObject();
 
         }
     }
@@ -127,9 +128,11 @@ public class DueDate {
             JsonNode courseNameNode = node.get("course");
             JsonNode dateNode = node.get("date");
 
-            return new DueDate(nameNode.asText(), deserializationContext.readValue(dateNode.traverse(), LocalDateTime.class), courseNameNode.asText());
+            return new DueDate(nameNode.asText(), LocalDateTime.parse(dateNode.asText()), courseNameNode.asText());
 
 
         }
     }
+
+
 }
