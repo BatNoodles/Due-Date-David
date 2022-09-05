@@ -1,6 +1,7 @@
 import discord4j.core.DiscordClientBuilder;
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
+import dueDates.Database;
 import io.github.cdimascio.dotenv.Dotenv;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -22,7 +23,7 @@ public class DueDateDavid {
             System.out.println("Error trying to update slash commands: " + e);
         }
 
-
+        Database.loadInstance();
         Mono.just(client).repeatWhen(fluxDelay -> Flux.interval(Duration.ofSeconds(60))).subscribe(DueDateReminderHandler::handleRemind);
 
 

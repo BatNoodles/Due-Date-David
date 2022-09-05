@@ -1,5 +1,9 @@
 package dueDates;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -14,6 +18,18 @@ public class Course {
     public Course(String name){
         this.name = name.toUpperCase();
         memberIds = new HashSet<>();
+    }
+
+    @JsonCreator
+    public Course(
+            @JsonProperty("name")
+            String name,
+            @JsonProperty("memberIds")
+            @JsonAlias("members")
+            HashSet<Long> memberIds){
+        this.name = name;
+        if (memberIds == null) this.memberIds = new HashSet<>();
+        else this.memberIds = new HashSet<>(memberIds);
     }
 
     /**
@@ -46,4 +62,10 @@ public class Course {
     public void addUserId(Long userId){memberIds.add(userId);}
     @Override
     public String toString(){return name;}
+
+    public boolean equals(Object o){
+        if (o == null) return false;
+        if (!(o instanceof  Course other)) return false;
+        return other.name.equals(name) && other.memberIds.equals(memberIds);
+    }
 }
