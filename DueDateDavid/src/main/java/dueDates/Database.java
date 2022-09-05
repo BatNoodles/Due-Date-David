@@ -119,14 +119,19 @@ public class Database {
     /**
      * Loads a database from a json file.
      * @param filename - Name of the json file.
-     * @return Database - the database loaded
+     * @return Database - the database loaded.
      * @throws IOException - Error is encountered opening the file.
      */
     public static Database load(String filename) throws IOException{
         return deserialize(new FileInputStream(filename));
     }
 
-
+    /**
+     * Deserializes a database from an InputStream.
+     * @param stream InputStream of database data.
+     * @return Database object.
+     * @throws IOException Exception thrown when reading from the stream.
+     */
     public static Database deserialize(InputStream stream) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         SimpleModule module = new SimpleModule("DueDateDeserializer", new Version(1,0,0,null,null,null));
@@ -137,6 +142,11 @@ public class Database {
         return objectMapper.readValue(stream, Database.class);
     }
 
+    /**
+     * Serializes the database to an output stream.
+     * @param stream Stream for the serialized Database to be written to.
+     * @throws IOException Exception thrown when writing to the stream.
+     */
     public void serialize(OutputStream stream) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         SimpleModule module = new SimpleModule("DueDateSerializer", new Version(1,0,0,null,null,null));
