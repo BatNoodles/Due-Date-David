@@ -39,11 +39,15 @@ public class DueDate {
         } catch (DateTimeParseException e) {return false;}
     }
 
-    public DueDate(String name, String course, String date, String time) {
+    public DueDate(String name, String course, String date, String time, Database database) {
         this.name = name;
 
-        this.course = Database.getInstance().getOrAddCourse(course);
+        this.course = database.getOrAddCourse(course);
         this.date = LocalDateTime.parse(LocalDateTime.now().getYear() + date + time, dateFormat); //Kind of lazy, but it is very unlikely that anyone would add a due date in another year - at least for the NZ school schedule.
+    }
+
+    public DueDate(String name, String course, String date, String time) {
+        this(name, course, date, time, Database.getInstance());
     }
 
     /**
