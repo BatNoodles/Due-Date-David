@@ -32,7 +32,7 @@ public class Database {
         return DATABASE;
     }
 
-    Database(){
+    protected Database(){
         dueDates = new ArrayList<>();
         courses = new ArrayList<>();
     }
@@ -154,7 +154,7 @@ public class Database {
 
         objectMapper.registerModule(module);
 
-        objectMapper.writeValue(stream, getInstance());
+        objectMapper.writeValue(stream, this);
     }
 
 
