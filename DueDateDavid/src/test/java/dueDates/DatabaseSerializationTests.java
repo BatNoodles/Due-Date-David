@@ -92,4 +92,23 @@ public class DatabaseSerializationTests {
 
     }
 
+    @Test
+    public void testSerializedDatabaseIsEqual() throws IOException {
+        Database database = new Database();
+        DueDate date = new DueDate("test", "TEST", "01/01", "12:00", database);
+        database.joinCourse("ONE_MEMBER", 1L);
+        database.joinCourse("TWO_MEMBERS", 2L);
+        database.joinCourse("TWO_MEMBERS", 3L);
+        database.addDueDate(date);
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        database.serialize(outputStream);
+
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(outputStream.toByteArray());
+
+        assertEquals(database, Database.deserialize(inputStream));
+
+
+    }
+
 }
