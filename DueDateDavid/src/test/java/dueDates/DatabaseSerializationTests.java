@@ -15,8 +15,6 @@ public class DatabaseSerializationTests {
         Exception exception = assertThrows(IOException.class, ()-> Database.load("NONEXISTENTFILE"));
         assertTrue(exception.getMessage().contains("cannot find the file specified"));
     }
-
-
     @Test
     public void testSerializeEmptyDatabase() throws IOException {
         Database database = new Database();
@@ -27,6 +25,18 @@ public class DatabaseSerializationTests {
         String output = outputStream.toString();
 
         assertEquals("{\"dueDates\":[],\"courses\":[]}", output);
+    }
+    @Test
+    public void testSerializeSingleEmptyCourse() throws IOException{
+        Database database = new Database();
+        database.addCourse("TEST_COURSE");
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        database.serialize(outputStream);
+
+        String output = outputStream.toString();
+
+        assertEquals("{\"dueDates\":[],\"courses\":[{\"name\":\"TEST_COURSE\",\"members\":[]}]}", output);
     }
 
 }
