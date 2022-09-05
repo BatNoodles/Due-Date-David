@@ -3,8 +3,8 @@ package dueDates;
 import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import java.io.File;
-import java.io.IOException;
+
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -99,13 +99,7 @@ public class Database {
      * @throws IOException - Error was encountered saving the file.
      */
     public void save(String filename) throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        SimpleModule module = new SimpleModule("DueDateSerializer", new Version(1,0,0,null,null,null));
-        module.addSerializer(DueDate.class, new DueDate.DueDateSerializer());
-
-        objectMapper.registerModule(module);
-
-        objectMapper.writeValue(new File(filename), getInstance());
+        serialize(new FileOutputStream(filename));
     }
 
     /**
@@ -129,16 +123,29 @@ public class Database {
      * @throws IOException - Error is encountered opening the file.
      */
     public static Database load(String filename) throws IOException{
+        return deserialize(new FileInputStream(filename));
+    }
 
+
+    public static Database deserialize(InputStream stream) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         SimpleModule module = new SimpleModule("DueDateDeserializer", new Version(1,0,0,null,null,null));
         module.addDeserializer(DueDate.class, new DueDate.DueDateDeserializer());
 
         objectMapper.registerModule(module);
 
-        return objectMapper.readValue(new File(filename), Database.class);
+        return objectMapper.readValue(stream, Database.class);
     }
 
+    public void serialize(OutputStream stream) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        SimpleModule module = new SimpleModule("DueDateSerializer", new Version(1,0,0,null,null,null));
+        module.addSerializer(DueDate.class, new DueDate.DueDateSerializer());
+
+        objectMapper.registerModule(module);
+
+        objectMapper.writeValue(stream, getInstance());
+    }
 
 
 }
