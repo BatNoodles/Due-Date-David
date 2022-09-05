@@ -25,7 +25,7 @@ public class Database {
 
     private static final String FILENAME = "resources/database.json";
 
-    private static final Database DATABASE = loadOrNew(FILENAME);
+    private static final Database DATABASE = new Database();
 
 
     public static Database getInstance(){
@@ -38,9 +38,30 @@ public class Database {
     }
 
 
+
+
     public List<DueDate> getDueDates(){return Collections.unmodifiableList(dueDates);}
 
     public List<Course> getCourses(){return Collections.unmodifiableList(courses);}
+
+    /**
+     * Sets the instance to the database saved in FILENAME.
+     */
+    public static void loadInstance(){
+        Database temp = loadOrNew(FILENAME);
+        DATABASE.set(temp);
+    }
+
+    /**
+     * Sets the dueDates and courses of this database to that of the other database
+     * @param database Database to be copied from.
+     */
+    private void set(Database database){
+        dueDates.clear();
+        dueDates.addAll(database.dueDates);
+        courses.clear();
+        courses.addAll(database.courses);
+    }
 
     /**
      * Gets all due dates based on a predicate.
