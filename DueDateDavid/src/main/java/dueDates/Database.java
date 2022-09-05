@@ -32,7 +32,7 @@ public class Database {
         return DATABASE;
     }
 
-    private Database(){
+    Database(){
         dueDates = new ArrayList<>();
         courses = new ArrayList<>();
     }
@@ -111,7 +111,7 @@ public class Database {
         try {
             return load(filename);
         } catch (IOException e) {
-            logger.log(Level.INFO, e + ": Creating empty database");
+            logger.log(Level.FINE, e + ": Creating empty database");
             return new Database();
         }
     }
