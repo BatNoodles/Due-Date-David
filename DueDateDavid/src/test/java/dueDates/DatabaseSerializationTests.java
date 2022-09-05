@@ -16,6 +16,13 @@ public class DatabaseSerializationTests {
         return db;
     }
 
+    private void assertSaveEquals(Database database, String expected) throws IOException {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        database.serialize(stream);
+        assertEquals(expected, stream.toString());
+
+    }
+
     @Test
     public void testExceptionWhenFileNotFound(){
         Exception exception = assertThrows(IOException.class, ()-> Database.load("NONEXISTENTFILE"));
@@ -24,25 +31,20 @@ public class DatabaseSerializationTests {
     @Test
     public void testSerializeEmptyDatabase() throws IOException {
         Database database = new Database();
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-
-        database.serialize(outputStream);
-
-        String output = outputStream.toString();
-
-        assertEquals("{\"dueDates\":[],\"courses\":[]}", output);
+        assertSaveEquals(database, "{\"dueDates\":[],\"courses\":[]}");
     }
     @Test
     public void testSerializeSingleEmptyCourse() throws IOException{
         Database database = withCourses("TEST_COURSE");
-
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        database.serialize(outputStream);
-
-        String output = outputStream.toString();
-
-        assertEquals("{\"dueDates\":[],\"courses\":[{\"name\":\"TEST_COURSE\",\"members\":[]}]}", output);
+        assertSaveEquals(database, "{\"dueDates\":[],\"courses\":[{\"name\":\"TEST_COURSE\",\"members\":[]}]}");
     }
 
+
+    @Test
+    public void testSerializeWithCourse() throws IOException {
+        Database database = withCourses("ONE_MEMBER");
+        database.joinCourse("ONE_MEMBER", 1L);
+        assertSaveEquals(database,"{\"dueDates\":[],\"courses\":[{\"name\":\"ONE_MEMBER\",\"members\":[1]}]}" );
+    }
 
 }
