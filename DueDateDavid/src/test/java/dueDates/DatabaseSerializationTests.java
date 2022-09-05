@@ -10,6 +10,12 @@ import static org.junit.Assert.*;
 
 public class DatabaseSerializationTests {
 
+    private Database withCourses(String... courseNames){
+        Database db = new Database();
+        for (String course : courseNames) db.addCourse(course);
+        return db;
+    }
+
     @Test
     public void testExceptionWhenFileNotFound(){
         Exception exception = assertThrows(IOException.class, ()-> Database.load("NONEXISTENTFILE"));
@@ -28,8 +34,7 @@ public class DatabaseSerializationTests {
     }
     @Test
     public void testSerializeSingleEmptyCourse() throws IOException{
-        Database database = new Database();
-        database.addCourse("TEST_COURSE");
+        Database database = withCourses("TEST_COURSE");
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         database.serialize(outputStream);
@@ -38,5 +43,6 @@ public class DatabaseSerializationTests {
 
         assertEquals("{\"dueDates\":[],\"courses\":[{\"name\":\"TEST_COURSE\",\"members\":[]}]}", output);
     }
+
 
 }
