@@ -178,5 +178,15 @@ public class Database {
         objectMapper.writeValue(stream, this);
     }
 
+    @Override
+    public boolean equals(Object o){
+        if (o == null) return false;
+        if (!(o instanceof Database other)) return false;
+        return other.dueDates.equals(dueDates) && other.courses.equals(courses);
+    }
+    @Override
+    public String toString(){
+        return courses + "\n" + dueDates;
+    }
 
 }
