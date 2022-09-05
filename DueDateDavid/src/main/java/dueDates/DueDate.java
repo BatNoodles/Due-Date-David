@@ -73,6 +73,12 @@ public class DueDate {
     public Course getCourse(){return course;}
 
     /**
+     * Gets the LocalDateTime associated with this due date.
+     * @return - LocalDateTime
+     */
+    public LocalDateTime getTime(){return date;}
+
+    /**
      * Returns the name of the DueDate
      * @return String - name
      */
