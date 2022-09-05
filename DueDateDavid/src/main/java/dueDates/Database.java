@@ -132,7 +132,7 @@ public class Database {
         try {
             return load(filename);
         } catch (IOException e) {
-            logger.log(Level.FINE, e + ": Creating empty database");
+            logger.log(Level.INFO, e + ": Creating empty database");
             return new Database();
         }
     }
