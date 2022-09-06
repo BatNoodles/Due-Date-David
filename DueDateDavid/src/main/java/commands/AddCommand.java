@@ -5,6 +5,8 @@ import dueDates.Database;
 import dueDates.DueDate;
 import reactor.core.publisher.Mono;
 
+import java.io.IOException;
+
 /**
  * Command for adding a due date.
  */
@@ -31,6 +33,11 @@ public class AddCommand implements SlashCommand{
         String message = "Due date  \""  + name +  "\" added";
         if (database.getChannel().isEmpty()) message += "\n*Warning: I have not been assigned a channel to send reminders to!\nSet a channel using `/channel set`*";
 
+        try {
+            Database.save();
+        } catch (IOException e) {
+            return event.reply("The due date was added but there was an error saving to disk. Please contact the developer.").withEphemeral(true);
+        }
         return event.reply(message).withEphemeral(true);
 
     }
