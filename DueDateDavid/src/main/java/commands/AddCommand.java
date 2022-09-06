@@ -24,10 +24,14 @@ public class AddCommand implements SlashCommand{
 
         if (!DueDate.dateTimeIsValid(date, time)) return event.reply("The date or time is invalid").withEphemeral(true);
 
-        Database.getInstance().addDueDate(new DueDate(name, course, date, time));
+        Database database = Database.getInstance();
 
-        return event.reply("Due date  \""  + name +  "\" added").withEphemeral(true);
+        database.addDueDate(new DueDate(name, course, date, time));
 
+        String message = "Due date  \""  + name +  "\" added";
+        if (database.getChannel().isEmpty()) message += "\n*Warning: I have not been assigned a channel to send reminders to!\nSet a channel using `/channel set`*";
+
+        return event.reply(message).withEphemeral(true);
 
     }
 }
