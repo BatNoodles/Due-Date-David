@@ -20,7 +20,7 @@ public class DueDateDavid {
             new GuildCommandUpdater(client.getRestClient(), Long.parseLong(dotenv.get("GUILD"))).UpdateCommands(List.of("add.json", "show.json", "join.json", "leave.json")); //Updates all the slash commands
         }
         catch (Exception e){
-            System.out.println("Error trying to update slash commands: " + e);
+            throw new RuntimeException(e);
         }
 
         Database.loadInstance();
