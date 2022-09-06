@@ -30,7 +30,7 @@ public class Database {
      */
     private Long channel;
 
-    private static final String FILENAME = "resources/database.json";
+    private static final String FILENAME = "database.json";
 
     private static final Database DATABASE = new Database();
 
