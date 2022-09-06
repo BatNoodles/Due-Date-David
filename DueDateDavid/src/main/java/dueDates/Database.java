@@ -1,8 +1,14 @@
 package dueDates;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.Version;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import discord4j.common.util.Snowflake;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -23,6 +29,11 @@ public class Database {
     private final List<DueDate> dueDates;
     private final List<Course> courses;
 
+    /**
+     * Id for the channel that reminders should be sent to. This is an optional as the channel may not be set, or may be removed.
+     */
+    private Long channel;
+
     private static final String FILENAME = "resources/database.json";
 
     private static final Database DATABASE = new Database();
@@ -35,14 +46,11 @@ public class Database {
     protected Database(){
         dueDates = new ArrayList<>();
         courses = new ArrayList<>();
+        channel = null;
     }
 
 
 
-
-    public List<DueDate> getDueDates(){return Collections.unmodifiableList(dueDates);}
-
-    public List<Course> getCourses(){return Collections.unmodifiableList(courses);}
 
     /**
      * Sets the instance to the database saved in FILENAME.
@@ -61,6 +69,7 @@ public class Database {
         dueDates.addAll(database.dueDates);
         courses.clear();
         courses.addAll(database.courses);
+        channel = database.channel;
     }
 
     /**
@@ -70,6 +79,18 @@ public class Database {
      */
     public List<DueDate> filterDueDates(Predicate<? super DueDate> predicate){return dueDates.stream().filter(predicate).toList();}
 
+    public void setChannel(Long channelId){
+        channel = channelId;
+    }
+    @JsonIgnore
+    public Optional<Long> getChannel(){return Optional.ofNullable(channel);}
+
+    @JsonProperty("channel")
+    public Long getChannelNullable(){return channel;}
+
+    public List<DueDate> getDueDates(){return Collections.unmodifiableList(dueDates);}
+
+    public List<Course> getCourses(){return Collections.unmodifiableList(courses);}
     public void addCourse(String courseName){
         courses.add(new Course(courseName));
     }
@@ -157,7 +178,6 @@ public class Database {
         ObjectMapper objectMapper = new ObjectMapper();
         SimpleModule module = new SimpleModule("DueDateDeserializer", new Version(1,0,0,null,null,null));
         module.addDeserializer(DueDate.class, new DueDate.DueDateDeserializer());
-
         objectMapper.registerModule(module);
 
         return objectMapper.readValue(stream, Database.class);
@@ -172,7 +192,6 @@ public class Database {
         ObjectMapper objectMapper = new ObjectMapper();
         SimpleModule module = new SimpleModule("DueDateSerializer", new Version(1,0,0,null,null,null));
         module.addSerializer(DueDate.class, new DueDate.DueDateSerializer());
-
         objectMapper.registerModule(module);
 
         objectMapper.writeValue(stream, this);
