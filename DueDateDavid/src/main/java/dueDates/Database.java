@@ -154,6 +154,11 @@ public class Database {
         }
     }
 
+    public static void save() throws IOException{
+        DATABASE.save(FILENAME);
+    }
+
+
     /**
      * Loads a database from a json file.
      * @param filename - Name of the json file.
