@@ -38,18 +38,18 @@ public class DatabaseSerializationTests {
     @Test
     public void testSerializeEmptyDatabase() throws IOException {
         Database database = new Database();
-        assertSaveEquals(database, "{\"dueDates\":[],\"courses\":[]}");
+        assertSaveEquals(database, "{\"dueDates\":[],\"courses\":[],\"channel\":null}");
     }
     @Test
     public void testSerializeSingleEmptyCourse() throws IOException{
         Database database = withCourses("TEST_COURSE");
-        assertSaveEquals(database, "{\"dueDates\":[],\"courses\":[{\"name\":\"TEST_COURSE\",\"members\":[]}]}");
+        assertSaveEquals(database, "{\"dueDates\":[],\"courses\":[{\"name\":\"TEST_COURSE\",\"members\":[]}],\"channel\":null}");
     }
     @Test
     public void testSerializeWithCourse() throws IOException {
         Database database = withCourses("ONE_MEMBER");
         database.joinCourse("ONE_MEMBER", 1L);
-        assertSaveEquals(database,"{\"dueDates\":[],\"courses\":[{\"name\":\"ONE_MEMBER\",\"members\":[1]}]}" );
+        assertSaveEquals(database,"{\"dueDates\":[],\"courses\":[{\"name\":\"ONE_MEMBER\",\"members\":[1]}],\"channel\":null}" );
     }
     @Test
     public void testSerializeWithCourses() throws IOException {
@@ -57,14 +57,14 @@ public class DatabaseSerializationTests {
         database.joinCourse("ONE_MEMBER", 1L);
         database.joinCourse("TWO_MEMBERS", 2L);
         database.joinCourse("TWO_MEMBERS", 3L);
-        assertSaveEquals(database,"{\"dueDates\":[],\"courses\":[{\"name\":\"ONE_MEMBER\",\"members\":[1]},{\"name\":\"TWO_MEMBERS\",\"members\":[2,3]}]}" );
+        assertSaveEquals(database,"{\"dueDates\":[],\"courses\":[{\"name\":\"ONE_MEMBER\",\"members\":[1]},{\"name\":\"TWO_MEMBERS\",\"members\":[2,3]}],\"channel\":null}" );
     }
     @Test
     public void testSerializeWithDueDates() throws IOException {
         Database database = new Database();
         DueDate date = new DueDate("test", "TEST", "01/01", "12:00", database);
         database.addDueDate(date);
-        assertSaveEquals(database,"{\"dueDates\":[{\"name\":\"test\",\"date\":\"" + date.getTime()+ "\",\"course\":\"TEST\"}],\"courses\":[{\"name\":\"TEST\",\"members\":[]}]}" );
+        assertSaveEquals(database,"{\"dueDates\":[{\"name\":\"test\",\"date\":\"" + date.getTime()+ "\",\"course\":\"TEST\"}],\"courses\":[{\"name\":\"TEST\",\"members\":[]}],\"channel\":null}" );
     }
     @Test
     public void testSerializeFullDatabase() throws IOException {
@@ -75,7 +75,7 @@ public class DatabaseSerializationTests {
         database.joinCourse("TWO_MEMBERS", 3L);
         database.addDueDate(date);
 
-        assertSaveEquals(database,"{\"dueDates\":[{\"name\":\"test\",\"date\":\"" + date.getTime()+ "\",\"course\":\"TEST\"}],\"courses\":[{\"name\":\"TEST\",\"members\":[]},{\"name\":\"ONE_MEMBER\",\"members\":[1]},{\"name\":\"TWO_MEMBERS\",\"members\":[2,3]}]}" );
+        assertSaveEquals(database,"{\"dueDates\":[{\"name\":\"test\",\"date\":\"" + date.getTime()+ "\",\"course\":\"TEST\"}],\"courses\":[{\"name\":\"TEST\",\"members\":[]},{\"name\":\"ONE_MEMBER\",\"members\":[1]},{\"name\":\"TWO_MEMBERS\",\"members\":[2,3]}],\"channel\":null}" );
     }
 
 
@@ -88,7 +88,7 @@ public class DatabaseSerializationTests {
         database.joinCourse("TWO_MEMBERS", 3L);
         database.addDueDate(date);
 
-        assertLoadEquals("{\"dueDates\":[{\"name\":\"test\",\"date\":\"" + date.getTime()+ "\",\"course\":\"TEST\"}],\"courses\":[{\"name\":\"TEST\",\"members\":[]},{\"name\":\"ONE_MEMBER\",\"members\":[1]},{\"name\":\"TWO_MEMBERS\",\"members\":[2,3]}]}", database);
+        assertLoadEquals("{\"dueDates\":[{\"name\":\"test\",\"date\":\"" + date.getTime()+ "\",\"course\":\"TEST\"}],\"courses\":[{\"name\":\"TEST\",\"members\":[]},{\"name\":\"ONE_MEMBER\",\"members\":[1]},{\"name\":\"TWO_MEMBERS\",\"members\":[2,3]}],\"channel\":null}", database);
 
     }
 
