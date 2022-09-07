@@ -87,6 +87,9 @@ public class Database {
     public List<DueDate> getDueDates(){return Collections.unmodifiableList(dueDates);}
 
     public List<Course> getCourses(){return Collections.unmodifiableList(courses);}
+
+    public DueDate removeDueDate(int index){return dueDates.remove(index);}
+
     public void addCourse(String courseName){
         courses.add(new Course(courseName));
     }
