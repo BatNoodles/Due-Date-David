@@ -8,7 +8,7 @@ import java.util.List;
  * Handles the slash commands by filtering the command name and getting the relevant command handler.
  */
 public class SlashCommandHandler {
-    private final static List<SlashCommand> commands = List.of(new AddCommand(), new JoinCommand(), new ShowCommand(), new LeaveCommand());
+    private final static List<SlashCommand> commands = List.of(new AddCommand(), new JoinCommand(), new ShowCommand(), new LeaveCommand(), new RemoveCommand());
 
     /**
      * Handles the command by sending it to the correct SlashCommand to handle.
