@@ -1,0 +1,12 @@
+{
+  "name": "remove",
+  "description": "Removes a due date",
+  "options":[
+    {
+      "name": "index",
+      "description": "Index of the due date (use /show)",
+      "type": 4,
+      "required": true
+    }
+  ]
+}
