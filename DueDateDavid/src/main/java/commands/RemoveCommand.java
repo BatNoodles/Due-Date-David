@@ -4,6 +4,8 @@ import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import dueDates.Database;
 import reactor.core.publisher.Mono;
 
+import java.io.IOException;
+
 public class RemoveCommand implements SlashCommand{
     @Override
     public String name() {
@@ -17,6 +19,12 @@ public class RemoveCommand implements SlashCommand{
         Database database = Database.getInstance();
 
         if (database.getDueDates().size() <= index || index  < 0) return event.reply("That is not a valid index! Use */show* to make sure you have the correct index.").withEphemeral(true);
+        try{
+            Database.save();
+        }
+        catch (IOException e){
+            return event.reply("The due date was removed but there was an error saving to disk. Please contact the developer.").withEphemeral(true);
+        }
 
         return event.reply(database.removeDueDate(index) + " was removed.").withEphemeral(true);
 
