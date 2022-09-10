@@ -1,0 +1,16 @@
+{
+  "name": "channel",
+  "description": "Sets or removes the reminder channel",
+  "options": [
+    {
+      "name": "set",
+      "type": 1,
+      "description": "Sets this channel to receive due date reminders"
+    },
+    {
+      "name": "remove",
+      "type": 1,
+      "description": "Removes the previously set channel"
+    }
+  ]
+}
