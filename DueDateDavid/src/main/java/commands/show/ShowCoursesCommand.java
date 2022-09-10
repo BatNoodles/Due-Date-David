@@ -1,12 +1,13 @@
-package commands;
+package commands.show;
 
+import commands.SlashCommand;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import dueDates.Database;
 import reactor.core.publisher.Mono;
 
 import java.util.stream.Collectors;
 
-public class ShowCoursesCommand implements SlashCommand{
+public class ShowCoursesCommand implements SlashCommand {
     @Override
     public String name() {
         return "courses";
