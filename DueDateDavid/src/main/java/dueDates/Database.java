@@ -5,12 +5,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import reactor.core.publisher.*;
 
 import java.io.*;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,10 +23,32 @@ import java.util.logging.Logger;
  */
 public class Database {
 
+    private static class DueDateFluxSink implements Consumer<FluxSink<DueDate>>{
+        private FluxSink<DueDate> fluxSink;
+
+        @Override
+        public void accept(FluxSink<DueDate> fluxSink){this.fluxSink = fluxSink;}
+
+        public void publishDueDate(DueDate date, Duration delay){
+            Mono.just(date).delayElement(delay).subscribe(d -> this.fluxSink.next(d));
+        }
+
+    }
     private static final Logger logger = Logger.getLogger(Database.class.getName());
 
     private final List<DueDate> dueDates;
     private final List<Course> courses;
+
+
+
+    @JsonIgnore
+    private final Flux<DueDate> reminderFlux;
+    @JsonIgnore
+    private final DueDateFluxSink reminderSink;
+    @JsonIgnore
+    private final Flux<DueDate> removalFlux;
+    @JsonIgnore
+    private final DueDateFluxSink removalSink;
 
     /**
      * Id for the channel that reminders should be sent to. This is an optional as the channel may not be set, or may be removed.
@@ -43,6 +68,11 @@ public class Database {
         dueDates = new ArrayList<>();
         courses = new ArrayList<>();
         channel = null;
+        reminderSink = new DueDateFluxSink();
+        reminderFlux = Flux.create(reminderSink);
+        removalSink = new DueDateFluxSink();
+        removalFlux = Flux.create(removalSink);
+
     }
 
 
