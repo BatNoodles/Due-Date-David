@@ -107,6 +107,10 @@ public class Database {
         emitAllDueDates();
     }
 
+
+    public Flux<DueDate> getReminderFlux(){return reminderFlux;}
+    public Flux<DueDate> getRemovalFlux(){return removalFlux;}
+
     /**
      * Gets all due dates based on a predicate.
      * @param predicate - Due date predicate
