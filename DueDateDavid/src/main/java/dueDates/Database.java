@@ -79,15 +79,19 @@ public class Database {
      * Emits all the due dates in the DueDates list to both the reminder sink (one hour before it is due) and the removal sink (the moment it is due)
      */
     private void emitAllDueDates(){
-        dueDates.forEach(
-                (d) -> {
-
-                    Duration timeToRemind = d.getTimeUntil().minusHours(1);
-                    Duration timeToRemove = d.getTimeUntil();
-                    reminderSink.publishDueDate(d, timeToRemind.isNegative() ? Duration.ZERO : timeToRemind);
-                    removalSink.publishDueDate(d, timeToRemove.isNegative() ? Duration.ZERO : timeToRemove);});
+        dueDates.forEach(this::emitDueDate);
     }
 
+    /**
+     * Emits a single DueDate
+     * @param d - The DueDate to be emitted.
+     */
+    private void emitDueDate(DueDate d){
+        Duration timeToRemind = d.getTimeUntil().minusHours(1);
+        Duration timeToRemove = d.getTimeUntil();
+        reminderSink.publishDueDate(d, timeToRemind.isNegative() ? Duration.ZERO : timeToRemind);
+        removalSink.publishDueDate(d, timeToRemove.isNegative() ? Duration.ZERO : timeToRemove);
+    }
 
     /**
      * Sets the instance to the database saved in FILENAME.
