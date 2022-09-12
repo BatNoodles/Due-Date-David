@@ -76,6 +76,12 @@ public class Database {
     }
 
 
+    private void emitAllDueDates(){
+        dueDates.forEach(
+                (d) -> {
+                    reminderSink.publishDueDate(d, d.getTimeUntil().minusHours(1));
+                    removalSink.publishDueDate(d, d.getTimeUntil());});
+    }
 
 
     /**
@@ -96,6 +102,7 @@ public class Database {
         courses.clear();
         courses.addAll(database.courses);
         channel = database.channel;
+        emitAllDueDates();
     }
 
     /**
