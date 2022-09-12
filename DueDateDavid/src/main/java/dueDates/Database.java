@@ -151,7 +151,10 @@ public class Database {
         courses.add(new Course(courseName));
     }
 
-    public void addDueDate(DueDate dueDate){dueDates.add(dueDate);}
+    public void addDueDate(DueDate dueDate){
+        dueDates.add(dueDate);
+        emitDueDate(dueDate);
+    }
 
     /**
      * Returns an optional of a course based on the course name.
