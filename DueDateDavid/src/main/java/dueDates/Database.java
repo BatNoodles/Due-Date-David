@@ -81,8 +81,11 @@ public class Database {
     private void emitAllDueDates(){
         dueDates.forEach(
                 (d) -> {
-                    reminderSink.publishDueDate(d, d.getTimeUntil().minusHours(1));
-                    removalSink.publishDueDate(d, d.getTimeUntil());});
+
+                    Duration timeToRemind = d.getTimeUntil().minusHours(1);
+                    Duration timeToRemove = d.getTimeUntil();
+                    reminderSink.publishDueDate(d, timeToRemind.isNegative() ? Duration.ZERO : timeToRemind);
+                    removalSink.publishDueDate(d, timeToRemove.isNegative() ? Duration.ZERO : timeToRemove);});
     }
 
 
