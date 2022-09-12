@@ -27,9 +27,11 @@ public class Database {
         private FluxSink<DueDate> fluxSink;
 
         @Override
-        public void accept(FluxSink<DueDate> fluxSink){this.fluxSink = fluxSink;}
+        public void accept(FluxSink<DueDate> fluxSink){
+            this.fluxSink = fluxSink;}
 
         public void publishDueDate(DueDate date, Duration delay){
+            if (fluxSink == null) return;
             Mono.just(date).delayElement(delay).subscribe(d -> this.fluxSink.next(d));
         }
 
@@ -69,9 +71,9 @@ public class Database {
         courses = new ArrayList<>();
         channel = null;
         reminderSink = new DueDateFluxSink();
-        reminderFlux = Flux.create(reminderSink);
+        reminderFlux = Flux.create(reminderSink).share();
         removalSink = new DueDateFluxSink();
-        removalFlux = Flux.create(removalSink);
+        removalFlux = Flux.create(removalSink).share();
 
     }
 
@@ -125,6 +127,7 @@ public class Database {
      */
     public List<DueDate> filterDueDates(Predicate<? super DueDate> predicate){return dueDates.stream().filter(predicate).toList();}
 
+    @JsonProperty("channel")
     public void setChannel(Long channelId){
         channel = channelId;
     }
