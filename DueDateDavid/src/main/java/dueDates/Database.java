@@ -5,12 +5,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import reactor.core.publisher.*;
 
 import java.io.*;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,10 +23,34 @@ import java.util.logging.Logger;
  */
 public class Database {
 
+    private static class DueDateFluxSink implements Consumer<FluxSink<DueDate>>{
+        private FluxSink<DueDate> fluxSink;
+
+        @Override
+        public void accept(FluxSink<DueDate> fluxSink){
+            this.fluxSink = fluxSink;}
+
+        public void publishDueDate(DueDate date, Duration delay){
+            if (fluxSink == null) return;
+            Mono.just(date).delayElement(delay).subscribe(d -> this.fluxSink.next(d));
+        }
+
+    }
     private static final Logger logger = Logger.getLogger(Database.class.getName());
 
     private final List<DueDate> dueDates;
     private final List<Course> courses;
+
+
+
+    @JsonIgnore
+    private final Flux<DueDate> reminderFlux;
+    @JsonIgnore
+    private final DueDateFluxSink reminderSink;
+    @JsonIgnore
+    private final Flux<DueDate> removalFlux;
+    @JsonIgnore
+    private final DueDateFluxSink removalSink;
 
     /**
      * Id for the channel that reminders should be sent to. This is an optional as the channel may not be set, or may be removed.
@@ -43,10 +70,30 @@ public class Database {
         dueDates = new ArrayList<>();
         courses = new ArrayList<>();
         channel = null;
+        reminderSink = new DueDateFluxSink();
+        reminderFlux = Flux.create(reminderSink).share();
+        removalSink = new DueDateFluxSink();
+        removalFlux = Flux.create(removalSink).share();
+
     }
 
+    /**
+     * Emits all the due dates in the DueDates list to both the reminder sink (one hour before it is due) and the removal sink (the moment it is due)
+     */
+    private void emitAllDueDates(){
+        dueDates.forEach(this::emitDueDate);
+    }
 
-
+    /**
+     * Emits a single DueDate
+     * @param d - The DueDate to be emitted.
+     */
+    private void emitDueDate(DueDate d){
+        Duration timeToRemind = d.getTimeUntil().minusHours(1);
+        Duration timeToRemove = d.getTimeUntil();
+        reminderSink.publishDueDate(d, timeToRemind.isNegative() ? Duration.ZERO : timeToRemind);
+        removalSink.publishDueDate(d, timeToRemove.isNegative() ? Duration.ZERO : timeToRemove);
+    }
 
     /**
      * Sets the instance to the database saved in FILENAME.
@@ -66,7 +113,12 @@ public class Database {
         courses.clear();
         courses.addAll(database.courses);
         channel = database.channel;
+        emitAllDueDates();
     }
+
+
+    public Flux<DueDate> getReminderFlux(){return reminderFlux;}
+    public Flux<DueDate> getRemovalFlux(){return removalFlux;}
 
     /**
      * Gets all due dates based on a predicate.
@@ -75,6 +127,7 @@ public class Database {
      */
     public List<DueDate> filterDueDates(Predicate<? super DueDate> predicate){return dueDates.stream().filter(predicate).toList();}
 
+    @JsonProperty("channel")
     public void setChannel(Long channelId){
         channel = channelId;
     }
@@ -88,14 +141,33 @@ public class Database {
 
     public List<Course> getCourses(){return Collections.unmodifiableList(courses);}
 
+    /**
+     * Removes a due date and returns it.
+     * @param index - Index of the due date to be removed.
+     * @return DueDate that was removed.
+     */
     public DueDate removeDueDate(int index){return dueDates.remove(index);}
+
+    public void removeDueDate(DueDate dueDate){dueDates.remove(dueDate);}
 
     public void addCourse(String courseName){
         courses.add(new Course(courseName));
     }
 
-    public void addDueDate(DueDate dueDate){dueDates.add(dueDate);}
+    /**
+     * Adds a DueDate, and also sets it to be emitted to the reminder and removal fluxes
+     * @param dueDate - DueDate to be added.
+     */
+    public void addDueDate(DueDate dueDate){
+        dueDates.add(dueDate);
+        emitDueDate(dueDate);
+    }
 
+    /**
+     * Returns an optional of a course based on the course name.
+     * @param courseName Name of the course to be gotten
+     * @return Optional containing course if it exists, empty if it does not
+     */
     public Optional<Course> getCourse(String courseName){return courses.stream().filter(s->s.getName().equalsIgnoreCase(courseName)).findFirst();}
 
     /**
@@ -130,6 +202,12 @@ public class Database {
         );
     }
 
+    /**
+     * Returns whether a user is in a course.
+     * @param course Name of the course.
+     * @param userId Id of the user.
+     * @return True if the user is in the course, false if the user is not in the course or the course does not exist.
+     */
     public boolean userInCourse(String course, Long userId){
         return getCourse(course).map(value -> value.containsUser(userId)).orElse(false);
     }

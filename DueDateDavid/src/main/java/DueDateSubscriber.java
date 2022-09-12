@@ -3,6 +3,10 @@ import discord4j.core.GatewayDiscordClient;
 import discord4j.core.object.entity.channel.MessageChannel;
 import dueDates.Database;
 import dueDates.DueDate;
+import reactor.core.publisher.Flux;
+
+import java.io.IOException;
+import java.util.Optional;
 
 
 /**
@@ -11,19 +15,32 @@ import dueDates.DueDate;
  * from static to not, where the handleRemind is called as a subscribed method to the flux.
  *
  */
-public class DueDateReminderHandler {
+public class DueDateSubscriber {
+    public static void subscribeToReminder(Flux<DueDate> flux, GatewayDiscordClient client){
+        flux.subscribe(d -> handleRemind(client, d));
+    }
 
-    private static final Snowflake TESTING_CHANNEL = Snowflake.of(445386053042307072L);
+    public static void subscribeToRemoval(Flux<DueDate> flux){
+        flux.subscribe(d -> {
+            Database.getInstance().removeDueDate(d);
+            try {
+                Database.save();
+            } catch (IOException ignored) {} //Want to change this, probably not the best idea to ignore IOExceptions :\
+        });
+    }
+
 
     /**
      * Handles sending the reminder message for all due dates that due in one hour. (It would be dumb to send a reminder exactly as the message is due)
      * @param client GatewayDiscordClient
      */
-    public static void handleRemind(GatewayDiscordClient client) {
-        Database.getInstance().filterDueDates(d -> d.getTimeUntil().getSeconds() <= 3600 && d.getTimeUntil().getSeconds() >= 3540) //Duration.getHourPart was inconsistently giving one or zero, so getSeconds is used for precision
-                .forEach(dueDate -> client.getChannelById(TESTING_CHANNEL)
-                        .ofType(MessageChannel.class).
-                        subscribe(channel -> sendDueDate(dueDate, channel)));
+    private static void handleRemind(GatewayDiscordClient client, DueDate date) {
+        Optional<Long> idOptional = Database.getInstance().getChannel();
+        idOptional
+                .ifPresent(id -> client
+                        .getChannelById(Snowflake.of(id))
+                        .ofType(MessageChannel.class)
+                        .subscribe(channel -> sendDueDate(date, channel)));
 
     }
 

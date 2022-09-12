@@ -3,10 +3,6 @@ import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import dueDates.Database;
 import io.github.cdimascio.dotenv.Dotenv;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-
-import java.time.Duration;
 import java.util.List;
 import java.util.Objects;
 
@@ -22,9 +18,10 @@ public class DueDateDavid {
         catch (Exception e){
             throw new RuntimeException(e);
         }
-
+        DueDateSubscriber.subscribeToReminder(Database.getInstance().getReminderFlux(), client);
+        DueDateSubscriber.subscribeToRemoval(Database.getInstance().getRemovalFlux());
         Database.loadInstance();
-        Mono.just(client).repeatWhen(fluxDelay -> Flux.interval(Duration.ofSeconds(60))).subscribe(DueDateReminderHandler::handleRemind);
+
 
 
         client.on(ChatInputInteractionEvent.class, SlashCommandHandler::handleCommand).then(client.onDisconnect()).block(); //Listens for SlashCommands used in the chat until the bot disconnects
