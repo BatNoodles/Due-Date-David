@@ -151,6 +151,10 @@ public class Database {
         courses.add(new Course(courseName));
     }
 
+    /**
+     * Adds a DueDate, and also sets it to be emitted to the reminder and removal fluxes
+     * @param dueDate - DueDate to be added.
+     */
     public void addDueDate(DueDate dueDate){
         dueDates.add(dueDate);
         emitDueDate(dueDate);
