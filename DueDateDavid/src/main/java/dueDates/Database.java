@@ -75,7 +75,9 @@ public class Database {
 
     }
 
-
+    /**
+     * Emits all the due dates in the DueDates list to both the reminder sink (one hour before it is due) and the removal sink (the moment it is due)
+     */
     private void emitAllDueDates(){
         dueDates.forEach(
                 (d) -> {
@@ -125,7 +127,14 @@ public class Database {
 
     public List<Course> getCourses(){return Collections.unmodifiableList(courses);}
 
+    /**
+     * Removes a due date and returns it.
+     * @param index - Index of the due date to be removed.
+     * @return DueDate that was removed.
+     */
     public DueDate removeDueDate(int index){return dueDates.remove(index);}
+
+    public void removeDueDate(DueDate dueDate){dueDates.remove(dueDate);}
 
     public void addCourse(String courseName){
         courses.add(new Course(courseName));
@@ -133,6 +142,11 @@ public class Database {
 
     public void addDueDate(DueDate dueDate){dueDates.add(dueDate);}
 
+    /**
+     * Returns an optional of a course based on the course name.
+     * @param courseName Name of the course to be gotten
+     * @return Optional containing course if it exists, empty if it does not
+     */
     public Optional<Course> getCourse(String courseName){return courses.stream().filter(s->s.getName().equalsIgnoreCase(courseName)).findFirst();}
 
     /**
@@ -167,6 +181,12 @@ public class Database {
         );
     }
 
+    /**
+     * Returns whether a user is in a course.
+     * @param course Name of the course.
+     * @param userId Id of the user.
+     * @return True if the user is in the course, false if the user is not in the course or the course does not exist.
+     */
     public boolean userInCourse(String course, Long userId){
         return getCourse(course).map(value -> value.containsUser(userId)).orElse(false);
     }
