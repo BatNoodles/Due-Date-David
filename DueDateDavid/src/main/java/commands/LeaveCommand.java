@@ -7,6 +7,9 @@ import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 
+/**
+ * Command allowing a user to leave a course.
+ */
 public class LeaveCommand implements SlashCommand{
     @Override
     public String name() {

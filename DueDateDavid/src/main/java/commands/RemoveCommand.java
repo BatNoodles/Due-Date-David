@@ -7,6 +7,9 @@ import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 
+/**
+ * Command allowing a user to remove a due date.
+ */
 public class RemoveCommand implements SlashCommand{
     @Override
     public String name() {

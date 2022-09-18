@@ -5,6 +5,9 @@ import reactor.core.publisher.Mono;
 
 import java.util.List;
 
+/**
+ * Handles commands that have sub-command groups.
+ */
 public abstract class GroupCommand implements SlashCommand{
     private final List<SlashCommand> subCommands;
 

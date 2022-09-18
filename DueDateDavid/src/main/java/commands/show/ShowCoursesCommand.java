@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * Shows all of the courses, split by whether the user has joined that course.
+ */
 public class ShowCoursesCommand implements SlashCommand {
     @Override
     public String name() {

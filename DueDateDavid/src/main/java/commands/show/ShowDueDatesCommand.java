@@ -7,6 +7,9 @@ import reactor.core.publisher.Mono;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+/**
+ * Shows all of the due dates that are currently stored in the database.
+ */
 public class ShowDueDatesCommand implements SlashCommand {
 
     @Override

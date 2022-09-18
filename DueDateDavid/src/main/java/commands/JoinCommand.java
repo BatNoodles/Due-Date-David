@@ -6,6 +6,9 @@ import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 
+/**
+ * Command for allowing a user to join a course.
+ */
 public class JoinCommand implements SlashCommand{
 
     @Override
