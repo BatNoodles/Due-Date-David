@@ -1,12 +1,20 @@
 import discord4j.common.util.Snowflake;
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.object.entity.channel.MessageChannel;
+import dueDates.Course;
 import dueDates.Database;
 import dueDates.DueDate;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.io.IOException;
+import java.time.DayOfWeek;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 /**
@@ -51,10 +59,54 @@ public class DueDateSubscriber {
     }
 
     private static void sendMentions(DueDate dueDate, MessageChannel channel) {
-        dueDate.getCourse().getMembers()
-                .forEach(id -> channel.createMessage("<@" + id + ">").subscribe(message -> message.delete().subscribe()));
-
-
+        dueDate.getCourse().getMembers().forEach(id -> sendMentionForUser(id, channel));
     }
+
+    private static void sendMentionForUser(Long userId, MessageChannel channel){
+                channel.createMessage("<@" + userId + ">").subscribe(message -> message.delete().subscribe());
+    }
+
+
+    public static void subscribeToDailyReminders(GatewayDiscordClient client){
+        Mono.just(client)
+                .repeatWhen(fluxDelay -> Flux.interval(
+                        Duration.between(
+                                LocalDateTime.now(),
+                                LocalDateTime.now().withHour(9).withMinute(0).plusDays(1)),
+                        Duration.ofDays(1)))
+                .subscribe(DueDateSubscriber::handleDailySubscription);
+    }
+
+    public static void handleDailySubscription(GatewayDiscordClient client){
+        Database database = Database.getInstance();
+
+        if (LocalDate.now().getDayOfWeek().equals(DayOfWeek.MONDAY)){
+            sendReminder("**Due this week:\n**", database.filterDueDates((d) -> d.getTimeUntil().toDays() <= 7), client);
+        }
+        else{
+            sendReminder("**Due today:\n**", database.filterDueDates((d) -> d.getTimeUntil().toHours() <= 15), client);
+        }
+    }
+
+    public static void sendReminder(String message, List<DueDate> dueDates, GatewayDiscordClient client){
+        if (dueDates.isEmpty()) return;
+        Optional<Long> idOptional = Database.getInstance().getChannel();
+        idOptional
+                .ifPresent(id -> client
+                        .getChannelById(Snowflake.of(id))
+                        .ofType(MessageChannel.class)
+                        .subscribe(channel -> {
+                            dueDates.stream().flatMap(d -> d.getCourse().getMembers().stream()).distinct().forEach(c -> sendMentionForUser(c, channel));
+                            channel
+                                    .createMessage(message +
+                                            dueDates
+                                            .stream()
+                                            .map(d->"`" + d + "`")
+                                            .collect(Collectors.joining("\n"))).subscribe();
+                        }));
+    }
+
+
+
 
 }
