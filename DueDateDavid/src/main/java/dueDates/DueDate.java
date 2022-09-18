@@ -23,7 +23,8 @@ public class DueDate {
     private static final DateTimeFormatter dateFormat =DateTimeFormatter.ofPattern("yyyydd/MMHH:mm");
 
     private final String name;
-    private final Course course;
+    private Course course;
+    private final String courseName;
     private final LocalDateTime date;
 
     /**
@@ -41,7 +42,7 @@ public class DueDate {
 
     public DueDate(String name, String course, String date, String time, Database database) {
         this.name = name;
-
+        this.courseName = course;
         this.course = database.getOrAddCourse(course);
         this.date = LocalDateTime.parse(LocalDateTime.now().getYear() + date + time, dateFormat); //Kind of lazy, but it is very unlikely that anyone would add a due date in another year - at least for the NZ school schedule.
     }
@@ -59,7 +60,11 @@ public class DueDate {
     public DueDate(String name, LocalDateTime date, String course){
         this.name = name;
         this.date = date;
-        this.course =  Database.getInstance().getOrAddCourse(course); //A course should never be added by this method if the serialization & deserialization is done correctly.
+        this.courseName = course;
+    }
+
+    public void setCourse(Database database){
+        this.course = database.getOrAddCourse(courseName);
     }
 
     /**
@@ -117,7 +122,7 @@ public class DueDate {
             jsonGenerator.writeStartObject();
             jsonGenerator.writeStringField("name", dueDate.name);
             jsonGenerator.writeStringField("date",  dueDate.date.toString());
-            jsonGenerator.writeStringField("course", dueDate.course.getName());
+            jsonGenerator.writeStringField("course", dueDate.courseName);
             jsonGenerator.writeEndObject();
 
         }

@@ -261,8 +261,9 @@ public class Database {
         SimpleModule module = new SimpleModule("DueDateDeserializer", new Version(1,0,0,null,null,null));
         module.addDeserializer(DueDate.class, new DueDate.DueDateDeserializer());
         objectMapper.registerModule(module);
-
-        return objectMapper.readValue(stream, Database.class);
+        Database database =  objectMapper.readValue(stream, Database.class);
+        database.getDueDates().forEach(d -> d.setCourse(database));
+        return database;
     }
 
     /**
