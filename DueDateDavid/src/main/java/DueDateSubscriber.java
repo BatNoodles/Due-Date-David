@@ -54,7 +54,7 @@ public class DueDateSubscriber {
 
     private static void sendDueDate(DueDate dueDate, MessageChannel channel) {
         sendMentions(dueDate, channel);
-        channel.createMessage(String.format("%s (%s) is due in one hour! Make sure that you have submitted.", dueDate.getName(), dueDate.getCourse())).subscribe();
+        channel.createMessage(String.format("**Due soon:** %s (%s) is due in one hour! Make sure that you have submitted.", dueDate.getName(), dueDate.getCourse())).subscribe();
 
     }
 
