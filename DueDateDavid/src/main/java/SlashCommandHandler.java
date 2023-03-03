@@ -1,5 +1,6 @@
 import commands.*;
 import commands.channel.ChannelCommand;
+import commands.remove.RemoveCommand;
 import commands.show.ShowCommand;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import reactor.core.publisher.Mono;

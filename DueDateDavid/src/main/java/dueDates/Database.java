@@ -212,6 +212,16 @@ public class Database {
         return getCourse(course).map(value -> value.containsUser(userId)).orElse(false);
     }
 
+
+    /**
+     * Removes a course from the list of courses
+     * @param course Course to be removed
+     */
+
+    public void removeCourse(Course course){
+        courses.remove(course);
+    }
+
     /**
      * Saves the Database to a json file.
      * @param filename - Filename to be saved to.
