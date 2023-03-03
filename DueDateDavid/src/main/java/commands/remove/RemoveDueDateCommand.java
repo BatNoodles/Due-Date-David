@@ -1,5 +1,7 @@
-package commands;
+package commands.remove;
 
+import commands.EventAdapter;
+import commands.SlashCommand;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import dueDates.Database;
 import dueDates.DueDate;
@@ -10,10 +12,10 @@ import java.io.IOException;
 /**
  * Command allowing a user to remove a due date.
  */
-public class RemoveDueDateCommand implements SlashCommand{
+public class RemoveDueDateCommand implements SlashCommand {
     @Override
     public String name() {
-        return "remove";
+        return "date";
     }
 
     @Override
