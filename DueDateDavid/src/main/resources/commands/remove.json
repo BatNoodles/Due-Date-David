@@ -1,12 +1,32 @@
 {
   "name": "remove",
-  "description": "Removes a due date",
+  "description": "Removes a due date or course",
   "options":[
     {
-      "name": "index",
-      "description": "Index of the due date (use /show)",
-      "type": 4,
-      "required": true
+      "name" : "date",
+      "description": "Remove a due date",
+      "type": 1,
+      "options": [
+        {
+          "name": "index",
+          "description": "Index of the due date (use /show)",
+          "type": 4,
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "course",
+      "description": "Remove a course",
+      "type": 1,
+      "options": [
+        {
+          "name": "code",
+          "description": "Course code",
+          "type": 3,
+          "required": "true"
+        }
+      ]
     }
   ]
 }
