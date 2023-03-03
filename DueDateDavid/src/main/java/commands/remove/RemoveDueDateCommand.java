@@ -15,12 +15,12 @@ import java.io.IOException;
 public class RemoveDueDateCommand implements SlashCommand {
     @Override
     public String name() {
-        return "date";
+        return "due";
     }
 
     @Override
     public Mono<Void> handleCommand(ChatInputInteractionEvent event) {
-        EventAdapter eventAdapter = new EventAdapter(event);
+        EventAdapter eventAdapter = new EventAdapter(event, 2);
         int index = Math.toIntExact(eventAdapter.optionAsLong("index"));
         Database database = Database.getInstance();
         if (database.getDueDates().size() <= index || index  < 0) return event.reply("That is not a valid index! Use */show* to make sure you have the correct index.").withEphemeral(true);
