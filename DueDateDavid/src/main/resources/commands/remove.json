@@ -24,7 +24,7 @@
           "name": "code",
           "description": "Course code",
           "type": 3,
-          "required": "true"
+          "required": true
         }
       ]
     }
