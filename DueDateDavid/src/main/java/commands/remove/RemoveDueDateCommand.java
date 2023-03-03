@@ -23,8 +23,8 @@ public class RemoveDueDateCommand implements SlashCommand {
         EventAdapter eventAdapter = new EventAdapter(event);
         int index = Math.toIntExact(eventAdapter.optionAsLong("index"));
         Database database = Database.getInstance();
-        DueDate removed = database.removeDueDate(index);
         if (database.getDueDates().size() <= index || index  < 0) return event.reply("That is not a valid index! Use */show* to make sure you have the correct index.").withEphemeral(true);
+        DueDate removed = database.removeDueDate(index);
         try{
             Database.save();
         }
