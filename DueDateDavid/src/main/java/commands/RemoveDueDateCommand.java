@@ -10,7 +10,7 @@ import java.io.IOException;
 /**
  * Command allowing a user to remove a due date.
  */
-public class RemoveCommand implements SlashCommand{
+public class RemoveDueDateCommand implements SlashCommand{
     @Override
     public String name() {
         return "remove";
